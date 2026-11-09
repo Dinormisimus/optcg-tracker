@@ -1,0 +1,717 @@
+[
+  {
+    "name": "Kouzuki Oden",
+    "code": "EB01-001",
+    "color": "Red/Green"
+  },
+  {
+    "name": "Hannyabal",
+    "code": "EB01-021",
+    "color": "Blue/Purple"
+  },
+  {
+    "name": "Kyros",
+    "code": "EB01-040",
+    "color": "Black/Yellow"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "EB02-010",
+    "color": "Green/Purple"
+  },
+  {
+    "name": "Nefeltari Vivi",
+    "code": "EB03-001",
+    "color": "Red/Blue"
+  },
+  {
+    "name": "Jewelry Bonney",
+    "code": "EB04-001",
+    "color": "Red/Yellow"
+  },
+  {
+    "name": "Nico Robin",
+    "code": "EB05-010",
+    "color": "Green/Yellow"
+  },
+  {
+    "name": "Roronoa Zoro",
+    "code": "OP01-001",
+    "color": "Red"
+  },
+  {
+    "name": "Trafalgar Law",
+    "code": "OP01-002",
+    "color": "Red/Green"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "OP01-003",
+    "color": "Red/Green"
+  },
+  {
+    "name": "Kouzuki Oden",
+    "code": "OP01-031",
+    "color": "Green"
+  },
+  {
+    "name": "Donquixote Doflamingo",
+    "code": "OP01-060",
+    "color": "Blue"
+  },
+  {
+    "name": "Kaido",
+    "code": "OP01-061",
+    "color": "Blue/Purple"
+  },
+  {
+    "name": "Crocodile",
+    "code": "OP01-062",
+    "color": "Blue/Purple"
+  },
+  {
+    "name": "King",
+    "code": "OP01-091",
+    "color": "Purple"
+  },
+  {
+    "name": "Edward.Newgate",
+    "code": "OP02-001",
+    "color": "Red"
+  },
+  {
+    "name": "Monkey.D.Garp",
+    "code": "OP02-002",
+    "color": "Red/Black"
+  },
+  {
+    "name": "Kin'emon",
+    "code": "OP02-025",
+    "color": "Green"
+  },
+  {
+    "name": "Sanji",
+    "code": "OP02-026",
+    "color": "Green/Blue"
+  },
+  {
+    "name": "Emporio.Ivankov",
+    "code": "OP02-049",
+    "color": "Blue"
+  },
+  {
+    "name": "Magellan",
+    "code": "OP02-071",
+    "color": "Purple"
+  },
+  {
+    "name": "Zephyr",
+    "code": "OP02-072",
+    "color": "Purple/Black"
+  },
+  {
+    "name": "Smoker",
+    "code": "OP02-093",
+    "color": "Black"
+  },
+  {
+    "name": "Portgas.D.Ace",
+    "code": "OP03-001",
+    "color": "Red"
+  },
+  {
+    "name": "Kuro",
+    "code": "OP03-021",
+    "color": "Green"
+  },
+  {
+    "name": "Arlong",
+    "code": "OP03-022",
+    "color": "Green/Yellow"
+  },
+  {
+    "name": "Nami",
+    "code": "OP03-040",
+    "color": "Blue"
+  },
+  {
+    "name": "Iceburg",
+    "code": "OP03-058",
+    "color": "Purple"
+  },
+  {
+    "name": "Rob Lucci",
+    "code": "OP03-076",
+    "color": "Black"
+  },
+  {
+    "name": "Charlotte Linlin",
+    "code": "OP03-077",
+    "color": "Black/Yellow"
+  },
+  {
+    "name": "Charlotte Katakuri",
+    "code": "OP03-099",
+    "color": "Yellow"
+  },
+  {
+    "name": "Nefeltari Vivi",
+    "code": "OP04-001",
+    "color": "Red/Blue"
+  },
+  {
+    "name": "Donquixote Doflamingo",
+    "code": "OP04-019",
+    "color": "Green/Purple"
+  },
+  {
+    "name": "Issho",
+    "code": "OP04-020",
+    "color": "Green/Black"
+  },
+  {
+    "name": "Rebecca",
+    "code": "OP04-039",
+    "color": "Blue/Black"
+  },
+  {
+    "name": "Queen",
+    "code": "OP04-040",
+    "color": "Blue/Yellow"
+  },
+  {
+    "name": "Crocodile",
+    "code": "OP04-058",
+    "color": "Purple/Yellow"
+  },
+  {
+    "name": "Sabo",
+    "code": "OP05-001",
+    "color": "Red/Black"
+  },
+  {
+    "name": "Belo Betty",
+    "code": "OP05-002",
+    "color": "Red/Yellow"
+  },
+  {
+    "name": "Donquixote Rosinante",
+    "code": "OP05-022",
+    "color": "Green/Blue"
+  },
+  {
+    "name": "Sakazuki",
+    "code": "OP05-041",
+    "color": "Blue/Black"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "OP05-060",
+    "color": "Purple"
+  },
+  {
+    "name": "Enel",
+    "code": "OP05-098",
+    "color": "Yellow"
+  },
+  {
+    "name": "Uta",
+    "code": "OP06-001",
+    "color": "Red/Purple"
+  },
+  {
+    "name": "Hody Jones",
+    "code": "OP06-020",
+    "color": "Green"
+  },
+  {
+    "name": "Perona",
+    "code": "OP06-021",
+    "color": "Green/Black"
+  },
+  {
+    "name": "Yamato",
+    "code": "OP06-022",
+    "color": "Green/Yellow"
+  },
+  {
+    "name": "Vinsmoke Reiju",
+    "code": "OP06-042",
+    "color": "Blue/Purple"
+  },
+  {
+    "name": "Gecko Moria",
+    "code": "OP06-080",
+    "color": "Black"
+  },
+  {
+    "name": "Monkey.D.Dragon",
+    "code": "OP07-001",
+    "color": "Red"
+  },
+  {
+    "name": "Jewelry Bonney",
+    "code": "OP07-019",
+    "color": "Green"
+  },
+  {
+    "name": "Boa Hancock",
+    "code": "OP07-038",
+    "color": "Blue"
+  },
+  {
+    "name": "Foxy",
+    "code": "OP07-059",
+    "color": "Purple"
+  },
+  {
+    "name": "Rob Lucci",
+    "code": "OP07-079",
+    "color": "Black"
+  },
+  {
+    "name": "Vegapunk",
+    "code": "OP07-097",
+    "color": "Yellow"
+  },
+  {
+    "name": "Tony Tony.Chopper",
+    "code": "OP08-001",
+    "color": "Red/Green"
+  },
+  {
+    "name": "Marco",
+    "code": "OP08-002",
+    "color": "Red/Blue"
+  },
+  {
+    "name": "Carrot",
+    "code": "OP08-021",
+    "color": "Green"
+  },
+  {
+    "name": "King",
+    "code": "OP08-057",
+    "color": "Purple/Black"
+  },
+  {
+    "name": "Charlotte Pudding",
+    "code": "OP08-058",
+    "color": "Purple/Yellow"
+  },
+  {
+    "name": "Kalgara",
+    "code": "OP08-098",
+    "color": "Yellow"
+  },
+  {
+    "name": "Shanks",
+    "code": "OP09-001",
+    "color": "Red"
+  },
+  {
+    "name": "Lim",
+    "code": "OP09-022",
+    "color": "Green/Purple"
+  },
+  {
+    "name": "Buggy",
+    "code": "OP09-042",
+    "color": "Blue"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "OP09-061",
+    "color": "Purple/Black"
+  },
+  {
+    "name": "Nico Robin",
+    "code": "OP09-062",
+    "color": "Purple/Yellow"
+  },
+  {
+    "name": "Marshall.D.Teach",
+    "code": "OP09-081",
+    "color": "Black"
+  },
+  {
+    "name": "Smoker",
+    "code": "OP10-001",
+    "color": "Red/Green"
+  },
+  {
+    "name": "Caesar Clown",
+    "code": "OP10-002",
+    "color": "Red/Blue"
+  },
+  {
+    "name": "Sugar",
+    "code": "OP10-003",
+    "color": "Red/Purple"
+  },
+  {
+    "name": "Trafalgar Law",
+    "code": "OP10-022",
+    "color": "Green/Yellow"
+  },
+  {
+    "name": "Usopp",
+    "code": "OP10-042",
+    "color": "Blue/Black"
+  },
+  {
+    "name": "Eustass\"Captain\"Kid",
+    "code": "OP10-099",
+    "color": "Yellow"
+  },
+  {
+    "name": "Koby",
+    "code": "OP11-001",
+    "color": "Red/Black"
+  },
+  {
+    "name": "Jinbe",
+    "code": "OP11-021",
+    "color": "Green"
+  },
+  {
+    "name": "Shirahoshi",
+    "code": "OP11-022",
+    "color": "Green/Yellow"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "OP11-040",
+    "color": "Blue/Purple"
+  },
+  {
+    "name": "Nami",
+    "code": "OP11-041",
+    "color": "Blue/Yellow"
+  },
+  {
+    "name": "Charlotte Katakuri",
+    "code": "OP11-062",
+    "color": "Purple"
+  },
+  {
+    "name": "Silvers Rayleigh",
+    "code": "OP12-001",
+    "color": "Red"
+  },
+  {
+    "name": "Roronoa Zoro",
+    "code": "OP12-020",
+    "color": "Green"
+  },
+  {
+    "name": "Kuzan",
+    "code": "OP12-040",
+    "color": "Blue"
+  },
+  {
+    "name": "Sanji",
+    "code": "OP12-041",
+    "color": "Blue/Purple"
+  },
+  {
+    "name": "Donquixote Rosinante",
+    "code": "OP12-061",
+    "color": "Purple/Yellow"
+  },
+  {
+    "name": "Koala",
+    "code": "OP12-081",
+    "color": "Black/Yellow"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "OP13-001",
+    "color": "Red/Green"
+  },
+  {
+    "name": "Portgas.D.Ace",
+    "code": "OP13-002",
+    "color": "Red/Blue"
+  },
+  {
+    "name": "Gol.D.Roger",
+    "code": "OP13-003",
+    "color": "Red/Purple"
+  },
+  {
+    "name": "Sabo",
+    "code": "OP13-004",
+    "color": "Red/Black"
+  },
+  {
+    "name": "Imu",
+    "code": "OP13-079",
+    "color": "Black"
+  },
+  {
+    "name": "Jewelry Bonney",
+    "code": "OP13-100",
+    "color": "Yellow"
+  },
+  {
+    "name": "Trafalgar Law",
+    "code": "OP14-001",
+    "color": "Red"
+  },
+  {
+    "name": "Dracule Mihawk",
+    "code": "OP14-020",
+    "color": "Green"
+  },
+  {
+    "name": "Jinbe",
+    "code": "OP14-040",
+    "color": "Blue"
+  },
+  {
+    "name": "Boa Hancock",
+    "code": "OP14-041",
+    "color": "Blue/Yellow"
+  },
+  {
+    "name": "Donquixote Doflamingo",
+    "code": "OP14-060",
+    "color": "Purple"
+  },
+  {
+    "name": "Crocodile",
+    "code": "OP14-079",
+    "color": "Black"
+  },
+  {
+    "name": "Gecko Moria",
+    "code": "OP14-080",
+    "color": "Black/Yellow"
+  },
+  {
+    "name": "Krieg",
+    "code": "OP15-001",
+    "color": "Red/Green"
+  },
+  {
+    "name": "Lucy",
+    "code": "OP15-002",
+    "color": "Red/Blue"
+  },
+  {
+    "name": "Brook",
+    "code": "OP15-022",
+    "color": "Green/Black"
+  },
+  {
+    "name": "Rebecca",
+    "code": "OP15-039",
+    "color": "Blue"
+  },
+  {
+    "name": "Enel",
+    "code": "OP15-058",
+    "color": "Purple"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "OP15-098",
+    "color": "Yellow"
+  },
+  {
+    "name": "Portgas.D.Ace",
+    "code": "OP16-001",
+    "color": "Red"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "OP16-022",
+    "color": "Green/Blue"
+  },
+  {
+    "name": "Buggy",
+    "code": "OP16-041",
+    "color": "Blue"
+  },
+  {
+    "name": "Sengoku",
+    "code": "OP16-060",
+    "color": "Purple"
+  },
+  {
+    "name": "Yamato",
+    "code": "OP16-079",
+    "color": "Black"
+  },
+  {
+    "name": "Marshall.D.Teach",
+    "code": "OP16-080",
+    "color": "Black/Yellow"
+  },
+  {
+    "name": "Edward.Newgate",
+    "code": "OP17-001",
+    "color": "Red"
+  },
+  {
+    "name": "Shanks",
+    "code": "OP17-020",
+    "color": "Green"
+  },
+  {
+    "name": "Rocks.D.Xebec",
+    "code": "OP17-039",
+    "color": "Blue"
+  },
+  {
+    "name": "Kaido",
+    "code": "OP17-058",
+    "color": "Purple"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "OP17-079",
+    "color": "Black"
+  },
+  {
+    "name": "Charlotte Linlin",
+    "code": "OP17-099",
+    "color": "Yellow"
+  },
+  {
+    "name": "Uta",
+    "code": "P-011",
+    "color": "Red"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "P-047",
+    "color": "Blue"
+  },
+  {
+    "name": "Sakazuki",
+    "code": "P-076",
+    "color": "Blue/Black"
+  },
+  {
+    "name": "Nami",
+    "code": "P-117",
+    "color": "Blue"
+  },
+  {
+    "name": "Sanji",
+    "code": "PRB01-001",
+    "color": "Red"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "ST01-001",
+    "color": "Red"
+  },
+  {
+    "name": "Eustass\"Captain\"Kid",
+    "code": "ST02-001",
+    "color": "Green"
+  },
+  {
+    "name": "Crocodile",
+    "code": "ST03-001",
+    "color": "Blue"
+  },
+  {
+    "name": "Kaido",
+    "code": "ST04-001",
+    "color": "Purple"
+  },
+  {
+    "name": "Shanks",
+    "code": "ST05-001",
+    "color": "Purple"
+  },
+  {
+    "name": "Sakazuki",
+    "code": "ST06-001",
+    "color": "Black"
+  },
+  {
+    "name": "Charlotte Linlin",
+    "code": "ST07-001",
+    "color": "Yellow"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "ST08-001",
+    "color": "Black"
+  },
+  {
+    "name": "Yamato",
+    "code": "ST09-001",
+    "color": "Yellow"
+  },
+  {
+    "name": "Trafalgar Law",
+    "code": "ST10-001",
+    "color": "Red/Purple"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "ST10-002",
+    "color": "Red/Purple"
+  },
+  {
+    "name": "Eustass\"Captain\"Kid",
+    "code": "ST10-003",
+    "color": "Red/Purple"
+  },
+  {
+    "name": "Uta",
+    "code": "ST11-001",
+    "color": "Green"
+  },
+  {
+    "name": "Roronoa Zoro &amp; Sanji",
+    "code": "ST12-001",
+    "color": "Green/Blue"
+  },
+  {
+    "name": "Sabo",
+    "code": "ST13-001",
+    "color": "Red/Yellow"
+  },
+  {
+    "name": "Portgas.D.Ace",
+    "code": "ST13-002",
+    "color": "Blue/Yellow"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "ST13-003",
+    "color": "Black/Yellow"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "ST14-001",
+    "color": "Black"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "ST21-001",
+    "color": "Red"
+  },
+  {
+    "name": "Ace &amp; Newgate",
+    "code": "ST22-001",
+    "color": "Blue"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "ST29-001",
+    "color": "Yellow"
+  },
+  {
+    "name": "Luffy &amp; Ace",
+    "code": "ST30-001",
+    "color": "Red/Green"
+  }
+]

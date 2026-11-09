@@ -14,6 +14,7 @@ def create_app() -> FastAPI:
 
     # Registracija routera za autentifikaciju
     app.include_router(auth_router)
+    app.include_router(leaders_router)
 
     @app.get("/health", tags=["health"])
     async def health_check():
