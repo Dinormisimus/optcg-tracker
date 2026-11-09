@@ -45,7 +45,7 @@ async def seed_database():
                 session.add(User(**user_data))
 
         # 2. Unos vođa iz JSON datoteke
-        json_path = Path(__file__).parent / "leaders_data.json"
+        json_path = Path(__file__).resolve().parents[2] / "src" / "data" / "leaders.json"
         if json_path.exists():
             with open(json_path, "r", encoding="utf-8") as f:
                 leaders_list = json.load(f)

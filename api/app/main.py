@@ -3,7 +3,7 @@ from sqlalchemy import text
 
 from app.core.config import settings
 from app.core.database import AsyncSessionLocal
-from app.routers import auth_router
+from app.routers import auth_router, leaders_router
 
 
 def create_app() -> FastAPI:
