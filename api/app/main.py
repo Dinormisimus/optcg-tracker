@@ -7,6 +7,7 @@ from app.routers import (
     health_router,
     leaders_router,
     matches_router,
+    stats_router,
     tournaments_router,
 )
 
@@ -23,6 +24,7 @@ def create_app() -> FastAPI:
     app.include_router(leaders_router)
     app.include_router(matches_router)
     app.include_router(tournaments_router)
+    app.include_router(stats_router)
     app.include_router(health_router)
 
     return app

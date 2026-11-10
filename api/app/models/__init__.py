@@ -1,7 +1,15 @@
 from app.models.base import Base
-from app.models.user import User
 from app.models.leader import Leader
-from app.models.tournament import Tournament
 from app.models.match import Match
+from app.models.tournament import Tournament
+from app.models.tournament_participant import TournamentParticipant
+from app.models.user import User
 
-__all__ = ["Base", "User", "Leader", "Tournament", "Match"]
+__all__ = [
+    "Base",
+    "Leader",
+    "Match",
+    "Tournament",
+    "TournamentParticipant",
+    "User",
+]

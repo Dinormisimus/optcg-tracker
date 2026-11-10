@@ -165,16 +165,29 @@ async def test_patch_cannot_set_required_fields_to_null(
 async def test_tournament_match_can_be_created_without_round(
     client: AsyncClient,
     admin_user: User,
+    player_user: User,
     leader: Leader,
     tournament: Tournament,
 ):
     headers = await auth_header(client, "testadmin", "admin123")
+    registration = await client.post(
+        f"/tournaments/{tournament.id}/participants/me",
+        json={"leader_id": leader.id},
+        headers=headers,
+    )
     response = await client.post(
         "/matches",
-        json=match_body(leader, tournament_id=tournament.id),
+        json=match_body(
+            leader,
+            tournament_id=tournament.id,
+            opponent_user_id=player_user.id,
+            opponent_name="Player Two",
+        ),
         headers=headers,
     )
 
+    assert registration.status_code == 201
     assert response.status_code == 201
     assert response.json()["tournament_id"] == tournament.id
     assert response.json()["round_number"] is None
+    assert response.json()["opponent_user_id"] == player_user.id

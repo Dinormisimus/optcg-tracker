@@ -1,172 +1,305 @@
 # One Piece TCG Locals Stats Tracker
 
-Aplikacija za praćenje statistike mečeva i vođenje lokalnih turnira u One Piece Trading Card Gameu (OP TCG). Omogućuje igračima praćenje postotka pobjeda (Win Rate) po Leaderima i protivnicima, bilježenje ishoda mečeva (bacanje kockice, tko ide prvi/drugi) te organizaciju lokalnih turnira.
+Backend aplikacija za bilježenje OP TCG mečeva, pregled Leader karata i
+organizaciju lokalnih turnira. Igrači mogu pratiti svoje rezultate; organizator
+može upravljati turnirima.
 
-Referentni backend projekt iz kolegija **Programiranje za web** na SIT UNIZD.
-
----
-
-## 📁 Struktura projekta
+## Struktura
 
 ```text
-optcg-tracker/
-├── api/                     # Backend (FastAPI)
-│   ├── alembic/             # Skripte za baze i migracije
-│   ├── app/
-│   │   ├── core/            # Postavke, baza, JWT autorizacija i ovisnosti
-│   │   ├── models/          # SQLAlchemy ORM modeli (User, Leader, Match, Tournament)
-│   │   ├── repositories/    # SQL upiti i agregacije statistika
-│   │   ├── routers/         # API endpoints (rute)
-│   │   ├── schemas/         # Pydantic ulazne i izlazne sheme
-│   │   ├── services/        # Poslovna logika i autorizacija
-│   │   ├── __init__.py
-│   │   └── main.py          # Glavna FastAPI aplikacija
-│   ├── tests/               # Automatski testovi (pytest)
-│   ├── alembic.ini
-│   └── requirements.txt     # Python zavisnosti
-├── docker-compose.yml       # PostgreSQL 17 kontejner
-├── .env.example             # Predložak varijabli okoline
-└── README.md
+api/
+  alembic/       # migracije baze
+  app/
+    core/        # konfiguracija, baza, autentifikacija i greške
+    models/      # SQLAlchemy modeli
+    repositories/# upiti prema bazi
+    routers/     # FastAPI rute
+    schemas/     # Pydantic ulazne i izlazne sheme
+    services/    # poslovna logika
+  tests/         # pytest testovi
+docker-compose.yml
+.env.example
+```
 
-# Preduvjeti
-Prije pokretanja projekta provjerite imate li instalirano:
+## Preduvjeti
 
-Git
-Python 3.11+
-uv (brzi upravitelj Python paketima)
-Docker Desktop (s alatom Docker Compose)
+- Windows 10/11 i PowerShell
+- Git
+- Python 3.11 ili noviji
+- Docker Desktop s uključenim Docker Composeom
 
-🚀 Pokretanje projekta (Korak po korak)
+Provjeri instalacije iz PowerShella:
 
-1. Konfiguracija okoline
-Stvorite .env datoteku iz predloška u korijenu projekta:
+```powershell
+py --version
+docker --version
+docker compose version
+```
 
-```PowerShell
-# PowerShell (Windows)
+## Prvo pokretanje
+
+Sve naredbe u ovom odjeljku izvršavaju se iz korijenske mape projekta
+`optcg-tracker`.
+
+### 1. Konfiguriraj varijable okoline
+
+Napravi lokalnu `.env` datoteku iz predloška:
+
+```powershell
 Copy-Item .env.example .env
-
-# Bash / Linux / macOS
-cp .env.example .env
 ```
 
-2. Pokretanje baze podataka (PostgreSQL)
-U korijenu projekta pokrenite bazu u Docker kontejneru:
+`.env` sadrži vezu prema bazi i JWT postavke. Datoteku nemoj commitati; Git je
+ignorira. Za lokalni razvoj predložak već sadrži potrebne postavke.
 
-```bash
+### 2. Pokreni PostgreSQL u Dockeru
+
+Pokreni Docker Desktop, zatim u PowerShellu:
+
+```powershell
 docker compose up -d db
-```
-
-Status kontejnera provjerite naredbom 
-```bash
 docker compose ps
 ```
 
-3. Priprema backenda i virtualnog okruženja
-Ulazak u mapu api/, izrada okruženja alatom uv i instalacija zavisnosti:
-```PowerShell
-cd api
+Pričekaj da servis `db` ima status `Up`. Ako se ne pokrene, pogledaj zapisnik:
 
-# Izrada virtualnog okruženja
-uv venv
-
-# Aktivacija okruženja (PowerShell na Windowsima)
-.venv\Scripts\Activate.ps1
-
-# Aktivacija okruženja (Git Bash / Linux / macOS)
-# source .venv/Scripts/activate  (Git Bash)
-# source .venv/bin/activate       (Linux/macOS)
-
-# Instalacija paketa
-uv pip install -r requirements.txt
+```powershell
+docker compose logs db
 ```
 
-4. Primjena migracija i punjenje baze
-Stvaranje tablica u bazi i dodavanje inicijalnih podataka (Admin korisnik i službeni Leaderi):
-```bash
+Projekt koristi PostgreSQL 17 na `localhost:5432`. Compose konfiguracija
+stvara bazu `optcg_db`, korisnika `optcg_user` i razvojni volumen `pgdata`.
+
+### 3. Napravi Python virtualno okruženje i instaliraj pakete
+
+```powershell
+Set-Location api
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+Uspješna aktivacija obično se vidi po prefiksu `(.venv)` u retku PowerShella.
+Ako PowerShell blokira aktivaciju skripte, jednokratno pokreni:
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+Zatvori i ponovno otvori terminal pa ponovi aktivaciju iz `api` mape. Alternativno,
+možeš preskočiti aktivaciju i pozivati interpreter izravno:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+### 4. Napravi tablice i početne podatke
+
+Dok si u mapi `api` i virtualno okruženje je aktivno:
+
+```powershell
 alembic upgrade head
 python -m app.seed
 ```
 
-5. Pokretanje FastAPI poslužitelja
-```bash
-uvicorn app.main:app --reload
+Prva naredba primjenjuje sve Alembic migracije. Druga dodaje početne korisnike i
+OP TCG Leadere. Seed se može pokrenuti više puta; postojeće korisnike i Leadere
+ne dodaje ponovno.
+
+### 5. Pokreni API
+
+I dalje iz mape `api`:
+
+```powershell
+python -m uvicorn app.main:app --reload
 ```
 
-🔗 Linkovi za provjeru rada
-Nakon pokretanja poslužitelja otvorite u pregledniku:
+Ostavi ovaj prozor terminala otvoren dok koristiš aplikaciju. Zaustavi server s
+`Ctrl+C`.
 
-Health Check status: http://127.0.0.1:8000/health
-(Očekivani odziv: {"status": "ok", "database": "PostgreSQL 17..."})
+Otvori:
 
-Swagger UI dokumentacija: http://127.0.0.1:8000/docs
+- Swagger UI: <http://127.0.0.1:8000/docs>
+- Health check: <http://127.0.0.1:8000/health>
 
-📡 Trenutno dostupne backend rute
-- `POST /auth/login` prima JSON: `{"username": "...", "password": "..."}`.
-- `POST /auth/refresh` prima refresh token i vraća novi par tokena.
-- `GET /auth/me` vraća prijavljenog korisnika.
-- `GET /leaders` podržava `limit`, `offset` i opcionalni filter `color`.
-- `GET /matches` vraća samo mečeve prijavljenog korisnika i podržava `limit` i
-  `offset`.
-- `GET`, `POST`, `PATCH` i `DELETE /matches/{match_id}` omogućuju upravljanje
-  vlastitim mečevima; broj kola je opcionalan i za turnirske mečeve.
-- `/tournaments` omogućuje prijavljenim korisnicima pregled i organizatorima
-  upravljanje turnirima. Kreiranje zahtijeva ulogu `admin` ili `super_admin`,
-  izmjene i brisanje dopušteni su organizatoru ili superadministratoru, a turnir
-  s povezanim mečevima ne može se obrisati.
+Health check vraća status API-ja i verziju PostgreSQL-a. Ako baza nije dostupna,
+odgovor je HTTP `503`.
 
-🧪 Pokretanje testova
-Testovi koriste zasebnu PostgreSQL bazu kako razvojni podaci ne bi bili dirani.
-Po zadanim postavkama baza se naziva `optcg_db_test`; naziv se može promijeniti
-varijablom `TEST_DATABASE_URL`.
+## Svakodnevno pokretanje
 
-```PowerShell
+Nakon što su `.env`, virtualno okruženje, paketi, migracije i seed već postavljeni,
+za svaki novi radni dan dovoljno je:
+
+**PowerShell prozor 1 — baza, iz korijenske mape projekta:**
+
+```powershell
 docker compose up -d db
-cd api
-pytest
 ```
 
-Testna se baza priprema automatski pri prvom pokretanju testova, a tablice se
-čiste prije svakog testa.
+**PowerShell prozor 2 — API:**
 
-Rad s bazom i Alembic migracijama
-Sve promjene u SQL strukturi izvode se kroz Alembic migracije:
-
-```bash
-cd api
-
-# Stvaranje nove migracije nakon izmjene u models/
-alembic revision --autogenerate -m "opis promjene"
-
-# Primjena migracija na bazu
-alembic upgrade head
-
-# Poništavanje zadnje migracije
-alembic downgrade -1
-
-# Prikaz trenutne verzije baze
-alembic current
+```powershell
+Set-Location "C:\putanja\do\optcg-tracker\api"
+.\.venv\Scripts\Activate.ps1
+python -m uvicorn app.main:app --reload
 ```
 
-Potpuno resetiranje baze
-U slučaju pojave neusklađenosti ili rušenja testnih podataka:
-```bash
-# U korijenu projekta obrišite Docker kontejner i volumen
-docker compose down -v
+Zatim otvori <http://127.0.0.1:8000/docs>. Ako je terminal već otvoren u
+korijenskoj mapi projekta, dovoljno je `Set-Location api` umjesto pune putanje.
 
-# Ponovno pokrenite bazu i napravite migracije
-docker compose up -d db
-cd api
-alembic upgrade head
-python -m app.seed
-```
+## Početni korisnički računi
 
-👥 Početni testni računi (app.seed)
-Nakon pokretanja python -m app.seed, u bazi su dostupni sljedeći računi za testiranje:
+Nakon `python -m app.seed` dostupni su:
 
 | Uloga | Korisničko ime | Email | Lozinka |
 |---|---|---|---|
-| super_admin | superadmin | admin@example.com | Admin123! |
-| admin | organizer | organizer@example.com | Organizer123! |
-| user | player1 | player1@example.com | Player123! |
+| super_admin | `superadmin` | `admin@example.com` | `Admin123!` |
+| admin | `organizer` | `organizer@example.com` | `Organizer123!` |
+| user | `player1` | `player1@example.com` | `Player123!` |
 
-Prijava se obavlja korisničkim imenom i lozinkom.
+Prijava se obavlja korisničkim imenom i lozinkom. Lokalni testni računi služe
+samo za razvoj — nemoj koristiti te lozinke u produkciji.
+
+## Trenutačne API rute
+
+Zaštićene rute traže JWT access token. Swaggeru ga možeš dati preko **Authorize**
+gumba nakon poziva `POST /auth/login`.
+
+| Metoda | Ruta | Namjena |
+|---|---|---|
+| `GET` | `/health` | Provjera API-ja i baze |
+| `POST` | `/auth/login` | Prijava i dobivanje tokena |
+| `POST` | `/auth/refresh` | Obnova tokena |
+| `GET` | `/auth/me` | Podaci prijavljenog korisnika |
+| `GET` | `/leaders` | Popis Leadera; filter `color`, `limit`, `offset` |
+| `POST` | `/leaders` | Dodavanje Leadera (admin) |
+| `GET` | `/matches` | Vlastiti mečevi; `limit`, `offset` |
+| `POST` | `/matches` | Bilježenje meča |
+| `GET` | `/matches/{match_id}` | Dohvat vlastitog meča |
+| `PATCH` | `/matches/{match_id}` | Izmjena vlastitog meča |
+| `DELETE` | `/matches/{match_id}` | Brisanje vlastitog meča |
+| `GET` | `/tournaments` | Popis turnira; `limit`, `offset` |
+| `GET` | `/tournaments/mine` | Turniri na kojima sudjeluje prijavljeni korisnik |
+| `POST` | `/tournaments` | Stvaranje turnira (admin) |
+| `GET` | `/tournaments/{tournament_id}` | Dohvat turnira |
+| `GET` | `/tournaments/{tournament_id}/participants` | Prijavljeni igrači i njihovi Leaderi |
+| `POST` | `/tournaments/{tournament_id}/participants/me` | Prijava na turnir uz odabir Leadera |
+| `GET` | `/tournaments/{tournament_id}/participants/me` | Pregled vlastite prijave i Leadera |
+| `PATCH` | `/tournaments/{tournament_id}/participants/me` | Promjena Leadera prije prvog meča |
+| `DELETE` | `/tournaments/{tournament_id}/participants/me` | Odjava prije prvog meča |
+| `PATCH` | `/tournaments/{tournament_id}` | Izmjena turnira (organizator ili superadmin) |
+| `DELETE` | `/tournaments/{tournament_id}` | Brisanje praznog turnira |
+| `GET` | `/stats/overall` | Ukupna statistika prijavljenog korisnika |
+| `GET` | `/stats/leaders` | Statistika s vlastitim Leaderima |
+| `GET` | `/stats/opponents` | Statistika po imenu protivnika |
+| `GET` | `/stats/opponent-leaders` | Statistika protiv protivničkih Leadera |
+| `GET` | `/stats/matchups` | Statistika po protivniku i njegovu Leaderu |
+
+Igrač može pregledavati turnire, ali samo organizator turnira ili
+superadministrator može ga izmijeniti ili obrisati. Turnir s povezanim mečevima
+ne može se obrisati. Mečevi su vidljivi i izmjenjivi samo korisniku koji ih je
+zabilježio. Prijavljeni igrač bira Leadera za svaki turnir zasebno. Taj odabir
+može promijeniti do svojeg prvog meča na turniru; nakon toga ne može promijeniti
+Leadera ni odjaviti se s turnira. Turnir služi za grupiranje mečeva i pregled
+statistike. Za unos turnirskog meča prijavljen mora biti samo korisnik koji
+bilježi meč; protivnik ne mora imati korisnički račun niti biti prijavljen na
+turnir. Protivničko ime i Leader unose se radi statistike.
+
+Statistika se računa iz mečeva koje je prijavljeni korisnik zabilježio. Winrate
+je postotak pobjeda među odlučenim mečevima (`pobjede / (pobjede + porazi)`),
+tako da se neodlučeni mečevi prikazuju u ukupnom broju, ali ne ulaze u izračun
+winratea. Statistika protivnika grupira imena bez obzira na velika/mala slova i
+razmake na početku ili kraju. Liste po Leaderu i protivniku podržavaju
+`limit` i `offset`.
+
+## Testovi
+
+Testovi koriste zasebnu PostgreSQL bazu `optcg_db_test`, tako da ne brišu
+razvojne podatke iz `optcg_db`. Docker baza mora biti pokrenuta. Iz mape `api`,
+uz aktivno virtualno okruženje, pokreni:
+
+```powershell
+pytest
+```
+
+Testna se baza priprema automatski, a tablice se prazne prije svakog testa.
+Vlastitu testnu vezu možeš zadati varijablom okoline `TEST_DATABASE_URL`.
+**Nemoj je postaviti na razvojnu bazu** jer testovi brišu tablice u testnoj bazi.
+
+## Alembic migracije
+
+Sve promjene sheme baze moraju biti zapisane migracijama. Iz mape `api`:
+
+```powershell
+# Napravi migraciju nakon promjene SQLAlchemy modela
+alembic revision --autogenerate -m "opis promjene"
+
+# Prije primjene pročitaj i pregledaj generiranu migraciju
+alembic upgrade head
+
+# Provjeri trenutačnu verziju baze
+alembic current
+
+# Vrati jednu migraciju
+alembic downgrade -1
+```
+
+Autogeneriranu migraciju uvijek pregledaj prije primjene, posebno promjene koje
+uključuju preimenovanje stupaca ili brisanje podataka.
+
+## Česti problemi
+
+**`/docs` se ne otvara**
+
+- Provjeri da Uvicorn još radi i da terminal nije zatvoren.
+- Provjeri adresu <http://127.0.0.1:8000/docs>.
+- Ako je port zauzet, pokreni na drugom portu:
+  `python -m uvicorn app.main:app --reload --port 8001`.
+
+**API javlja da se ne može spojiti na bazu**
+
+- Provjeri da Docker Desktop radi.
+- Iz korijenske mape pokreni `docker compose ps`.
+- Po potrebi pogledaj `docker compose logs db`.
+- Provjeri da `.env` sadrži ispravnu `DATABASE_URL` za lokalni PostgreSQL servis.
+
+**Naredba `alembic` ili `uvicorn` nije pronađena**
+
+- Provjeri da si u mapi `api` i da je virtualno okruženje aktivirano.
+- Ili pokreni naredbu kroz interpreter virtualnog okruženja, npr.
+  `.\.venv\Scripts\python.exe -m alembic upgrade head`.
+
+**Import ili paket nedostaje**
+
+```powershell
+Set-Location api
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+## Potpuni reset lokalne baze
+
+Ovo briše Docker volumen i **sve podatke u lokalnoj razvojnoj bazi**. Koristi
+samo ako želiš krenuti od prazne baze:
+
+```powershell
+# Iz korijenske mape projekta; zaustavi API s Ctrl+C prije toga
+docker compose down -v
+docker compose up -d db
+
+# Zatim iz api mape, s aktivnim .venv
+Set-Location api
+alembic upgrade head
+python -m app.seed
+```
+
+## Kvaliteta koda
+
+Iz mape `api`:
+
+```powershell
+ruff check .
+ruff format --check .
+pytest
+```

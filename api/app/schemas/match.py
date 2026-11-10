@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 MatchResult = Literal["WIN", "LOSS", "DRAW"]
 DiceResult = Literal["WIN", "LOSS"]
@@ -19,6 +19,14 @@ class MatchCreate(BaseModel):
     round_number: int | None = Field(default=None, gt=0)
     tournament_id: int | None = Field(default=None, gt=0)
 
+    @field_validator("opponent_name")
+    @classmethod
+    def normalize_opponent_name(cls, value: str) -> str:
+        normalized = value.strip()
+        if not normalized:
+            raise ValueError("Ime protivnika ne smije biti prazno")
+        return normalized
+
 
 class MatchUpdate(BaseModel):
     my_leader_id: int | None = Field(default=None, gt=0)
@@ -30,6 +38,16 @@ class MatchUpdate(BaseModel):
     turn_order: TurnOrder | None = None
     round_number: int | None = Field(default=None, gt=0)
     tournament_id: int | None = Field(default=None, gt=0)
+
+    @field_validator("opponent_name")
+    @classmethod
+    def normalize_opponent_name(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
+        normalized = value.strip()
+        if not normalized:
+            raise ValueError("Ime protivnika ne smije biti prazno")
+        return normalized
 
 
 class MatchResponse(BaseModel):

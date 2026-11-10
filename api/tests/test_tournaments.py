@@ -124,6 +124,11 @@ async def test_tournament_cannot_be_deleted_while_matches_reference_it(
     tournament: Tournament,
 ):
     headers = await auth_header(client, "testadmin", "admin123")
+    registration = await client.post(
+        f"/tournaments/{tournament.id}/participants/me",
+        json={"leader_id": leader.id},
+        headers=headers,
+    )
     match = await client.post(
         "/matches",
         json={
@@ -140,6 +145,7 @@ async def test_tournament_cannot_be_deleted_while_matches_reference_it(
 
     response = await client.delete(f"/tournaments/{tournament.id}", headers=headers)
 
+    assert registration.status_code == 201
     assert match.status_code == 201
     assert response.status_code == 409
     assert response.json()["code"] == "tournament_has_matches"
@@ -172,3 +178,193 @@ async def test_missing_tournament_returns_not_found(
 
     assert response.status_code == 404
     assert response.json()["code"] == "not_found"
+
+
+async def test_user_can_join_tournament_and_see_own_participations(
+    client: AsyncClient,
+    player_user: User,
+    tournament: Tournament,
+    leader: Leader,
+):
+    headers = await auth_header(client, "testplayer", "player123")
+    joined = await client.post(
+        f"/tournaments/{tournament.id}/participants/me",
+        json={"leader_id": leader.id},
+        headers=headers,
+    )
+    mine = await client.get("/tournaments/mine", headers=headers)
+    roster = await client.get(
+        f"/tournaments/{tournament.id}/participants", headers=headers
+    )
+
+    assert joined.status_code == 201
+    assert joined.json()["user_id"] == player_user.id
+    assert joined.json()["leader_id"] == leader.id
+    assert mine.status_code == 200
+    assert mine.json()[0]["tournament_id"] == tournament.id
+    assert mine.json()[0]["leader_code"] == leader.code
+    assert roster.status_code == 200
+    assert roster.json()[0]["username"] == player_user.username
+
+
+async def test_participant_can_change_leader_before_first_tournament_match(
+    client: AsyncClient,
+    player_user: User,
+    tournament: Tournament,
+    leader: Leader,
+    db: AsyncSession,
+):
+    second_leader = Leader(name="Second Leader", code="OP99-010", color="Blue")
+    db.add(second_leader)
+    await db.commit()
+    headers = await auth_header(client, "testplayer", "player123")
+    joined = await client.post(
+        f"/tournaments/{tournament.id}/participants/me",
+        json={"leader_id": leader.id},
+        headers=headers,
+    )
+
+    changed = await client.patch(
+        f"/tournaments/{tournament.id}/participants/me",
+        json={"leader_id": second_leader.id},
+        headers=headers,
+    )
+
+    assert joined.status_code == 201
+    assert changed.status_code == 200
+    assert changed.json()["leader_id"] == second_leader.id
+
+
+async def test_participant_leader_is_locked_after_first_tournament_match(
+    client: AsyncClient,
+    player_user: User,
+    tournament: Tournament,
+    leader: Leader,
+    db: AsyncSession,
+):
+    second_leader = Leader(name="Second Leader", code="OP99-011", color="Blue")
+    db.add(second_leader)
+    await db.commit()
+    player_headers = await auth_header(client, "testplayer", "player123")
+    joined = await client.post(
+        f"/tournaments/{tournament.id}/participants/me",
+        json={"leader_id": leader.id},
+        headers=player_headers,
+    )
+    match = await client.post(
+        "/matches",
+        json={
+            "my_leader_id": leader.id,
+            "opponent_leader_id": leader.id,
+            "opponent_name": "Guest",
+            "result": "WIN",
+            "dice_result": "WIN",
+            "turn_order": "FIRST",
+            "tournament_id": tournament.id,
+        },
+        headers=player_headers,
+    )
+    changed = await client.patch(
+        f"/tournaments/{tournament.id}/participants/me",
+        json={"leader_id": second_leader.id},
+        headers=player_headers,
+    )
+    unchanged = await client.patch(
+        f"/tournaments/{tournament.id}/participants/me",
+        json={"leader_id": leader.id},
+        headers=player_headers,
+    )
+
+    assert joined.status_code == 201
+    assert match.status_code == 201
+    assert changed.status_code == 409
+    assert changed.json()["code"] == "leader_locked"
+    assert unchanged.status_code == 200
+
+
+async def test_tournament_match_requires_only_reporter_to_be_registered(
+    client: AsyncClient,
+    admin_user: User,
+    player_user: User,
+    tournament: Tournament,
+    leader: Leader,
+    db: AsyncSession,
+):
+    opponent_leader = Leader(name="Opponent Leader", code="OP99-012", color="Blue")
+    db.add(opponent_leader)
+    await db.commit()
+    player_headers = await auth_header(client, "testplayer", "player123")
+    player_join = await client.post(
+        f"/tournaments/{tournament.id}/participants/me",
+        json={"leader_id": opponent_leader.id},
+        headers=player_headers,
+    )
+
+    wrong_own_leader = await client.post(
+        "/matches",
+        json={
+            "my_leader_id": leader.id,
+            "opponent_leader_id": leader.id,
+            "opponent_user_id": admin_user.id,
+            "opponent_name": admin_user.username,
+            "result": "WIN",
+            "dice_result": "WIN",
+            "turn_order": "FIRST",
+            "tournament_id": tournament.id,
+        },
+        headers=player_headers,
+    )
+    wrong_opponent_leader = await client.post(
+        "/matches",
+        json={
+            "my_leader_id": opponent_leader.id,
+            "opponent_leader_id": opponent_leader.id,
+            "opponent_user_id": admin_user.id,
+            "opponent_name": admin_user.username,
+            "result": "WIN",
+            "dice_result": "WIN",
+            "turn_order": "FIRST",
+            "tournament_id": tournament.id,
+        },
+        headers=player_headers,
+    )
+    assert player_join.status_code == 201
+    assert wrong_own_leader.status_code == 409
+    assert wrong_own_leader.json()["code"] == "tournament_leader_mismatch"
+    assert wrong_opponent_leader.status_code == 201
+    assert wrong_opponent_leader.json()["opponent_user_id"] == admin_user.id
+
+
+async def test_participant_cannot_leave_after_recording_match(
+    client: AsyncClient,
+    player_user: User,
+    tournament: Tournament,
+    leader: Leader,
+):
+    headers = await auth_header(client, "testplayer", "player123")
+    joined = await client.post(
+        f"/tournaments/{tournament.id}/participants/me",
+        json={"leader_id": leader.id},
+        headers=headers,
+    )
+    await client.post(
+        "/matches",
+        json={
+            "my_leader_id": leader.id,
+            "opponent_leader_id": leader.id,
+            "opponent_name": "Guest",
+            "result": "LOSS",
+            "dice_result": "LOSS",
+            "turn_order": "SECOND",
+            "tournament_id": tournament.id,
+        },
+        headers=headers,
+    )
+
+    response = await client.delete(
+        f"/tournaments/{tournament.id}/participants/me", headers=headers
+    )
+
+    assert joined.status_code == 201
+    assert response.status_code == 409
+    assert response.json()["code"] == "participation_has_matches"
