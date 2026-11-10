@@ -1,6 +1,11 @@
 from app.schemas.auth import LoginRequest, RefreshTokenRequest, Token, TokenPayload
 from app.schemas.leader import LeaderCreate, LeaderResponse
 from app.schemas.match import MatchCreate, MatchResponse, MatchUpdate
+from app.schemas.tournament import (
+    TournamentCreate,
+    TournamentResponse,
+    TournamentUpdate,
+)
 from app.schemas.user import UserBase, UserCreate, UserResponse
 
 __all__ = [
@@ -13,6 +18,9 @@ __all__ = [
     "RefreshTokenRequest",
     "Token",
     "TokenPayload",
+    "TournamentCreate",
+    "TournamentResponse",
+    "TournamentUpdate",
     "UserBase",
     "UserCreate",
     "UserResponse",

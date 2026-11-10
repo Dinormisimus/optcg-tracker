@@ -133,23 +133,6 @@ async def test_match_rejects_nonexistent_leader(client: AsyncClient, admin_user:
     assert response.json()["code"] == "leader_not_found"
 
 
-async def test_tournament_match_requires_a_round(
-    client: AsyncClient,
-    admin_user: User,
-    leader: Leader,
-    tournament: Tournament,
-):
-    headers = await auth_header(client, "testadmin", "admin123")
-    response = await client.post(
-        "/matches",
-        json=match_body(leader, tournament_id=tournament.id),
-        headers=headers,
-    )
-
-    assert response.status_code == 422
-    assert response.json()["code"] == "tournament_round_required"
-
-
 async def test_match_rejects_self_as_opponent(
     client: AsyncClient, admin_user: User, leader: Leader
 ):
@@ -179,7 +162,7 @@ async def test_patch_cannot_set_required_fields_to_null(
     assert response.json()["code"] == "invalid_match"
 
 
-async def test_tournament_match_can_be_created_with_round(
+async def test_tournament_match_can_be_created_without_round(
     client: AsyncClient,
     admin_user: User,
     leader: Leader,
@@ -188,10 +171,10 @@ async def test_tournament_match_can_be_created_with_round(
     headers = await auth_header(client, "testadmin", "admin123")
     response = await client.post(
         "/matches",
-        json=match_body(leader, tournament_id=tournament.id, round_number=1),
+        json=match_body(leader, tournament_id=tournament.id),
         headers=headers,
     )
 
     assert response.status_code == 201
     assert response.json()["tournament_id"] == tournament.id
-    assert response.json()["round_number"] == 1
+    assert response.json()["round_number"] is None

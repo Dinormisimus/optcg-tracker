@@ -131,6 +131,19 @@ async def player_user(db: AsyncSession) -> User:
 
 
 @pytest.fixture
+async def super_admin_user(db: AsyncSession) -> User:
+    user = User(
+        username="testsuperadmin",
+        email="superadmin@example.com",
+        password_hash=_password_hash("superadmin123"),
+        role="super_admin",
+    )
+    db.add(user)
+    await db.commit()
+    return user
+
+
+@pytest.fixture
 async def inactive_user(db: AsyncSession) -> User:
     user = User(
         username="inactive",

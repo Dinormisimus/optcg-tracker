@@ -108,7 +108,11 @@ Swagger UI dokumentacija: http://127.0.0.1:8000/docs
 - `GET /matches` vraća samo mečeve prijavljenog korisnika i podržava `limit` i
   `offset`.
 - `GET`, `POST`, `PATCH` i `DELETE /matches/{match_id}` omogućuju upravljanje
-  vlastitim mečevima. Meč vezan uz turnir mora imati broj kola.
+  vlastitim mečevima; broj kola je opcionalan i za turnirske mečeve.
+- `/tournaments` omogućuje prijavljenim korisnicima pregled i organizatorima
+  upravljanje turnirima. Kreiranje zahtijeva ulogu `admin` ili `super_admin`,
+  izmjene i brisanje dopušteni su organizatoru ili superadministratoru, a turnir
+  s povezanim mečevima ne može se obrisati.
 
 🧪 Pokretanje testova
 Testovi koriste zasebnu PostgreSQL bazu kako razvojni podaci ne bi bili dirani.

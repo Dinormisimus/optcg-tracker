@@ -35,15 +35,6 @@ async def _validate_references(
         raise AppError("tournament_not_found", "Turnir nije pronađen", 404)
 
 
-def _validate_tournament_round(tournament_id: int | None, round_number: int | None):
-    if tournament_id is not None and round_number is None:
-        raise AppError(
-            "tournament_round_required",
-            "Meč na turniru mora imati broj kola",
-            422,
-        )
-
-
 async def list_matches(
     db: AsyncSession, user: User, limit: int, offset: int
 ) -> list[Match]:
@@ -59,7 +50,6 @@ async def get_match(db: AsyncSession, user: User, match_id: int) -> Match:
 
 async def create_match(db: AsyncSession, user: User, body: MatchCreate) -> Match:
     values = body.model_dump()
-    _validate_tournament_round(values["tournament_id"], values["round_number"])
     await _validate_references(db, user, values)
 
     match = Match(user_id=user.id, **values)
@@ -79,9 +69,6 @@ async def update_match(
             raise AppError("invalid_match", f"Polje {key} ne smije biti null", 422)
 
     await _validate_references(db, user, changes)
-    tournament_id = changes.get("tournament_id", match.tournament_id)
-    round_number = changes.get("round_number", match.round_number)
-    _validate_tournament_round(tournament_id, round_number)
 
     for key, value in changes.items():
         setattr(match, key, value)

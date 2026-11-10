@@ -22,10 +22,6 @@ class Match(Base):
             "round_number IS NULL OR round_number > 0",
             name="ck_match_round_number_positive",
         ),
-        CheckConstraint(
-            "tournament_id IS NULL OR round_number IS NOT NULL",
-            name="ck_match_tournament_round_required",
-        ),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
