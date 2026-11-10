@@ -100,6 +100,20 @@ Health Check status: http://127.0.0.1:8000/health
 
 Swagger UI dokumentacija: http://127.0.0.1:8000/docs
 
+🧪 Pokretanje testova
+Testovi koriste zasebnu PostgreSQL bazu kako razvojni podaci ne bi bili dirani.
+Po zadanim postavkama baza se naziva `optcg_db_test`; naziv se može promijeniti
+varijablom `TEST_DATABASE_URL`.
+
+```PowerShell
+docker compose up -d db
+cd api
+pytest
+```
+
+Testna se baza priprema automatski pri prvom pokretanju testova, a tablice se
+čiste prije svakog testa.
+
 Rad s bazom i Alembic migracijama
 Sve promjene u SQL strukturi izvode se kroz Alembic migracije:
 
@@ -135,8 +149,10 @@ python -m app.seed
 👥 Početni testni računi (app.seed)
 Nakon pokretanja python -m app.seed, u bazi su dostupni sljedeći računi za testiranje:
 
-Uloga   Korisničko ime  Email / Prijava Lozinka
-super_admin | superadmin |  admin@optcg.local |   Admin123!
-admin |   organizer |   organizer@optcg.local |   Organizer123!
-user |    player1 | player1@optcg.local | Player123!
+| Uloga | Korisničko ime | Email | Lozinka |
+|---|---|---|---|
+| super_admin | superadmin | admin@example.com | Admin123! |
+| admin | organizer | organizer@example.com | Organizer123! |
+| user | player1 | player1@example.com | Player123! |
 
+Prijava se obavlja korisničkim imenom i lozinkom.

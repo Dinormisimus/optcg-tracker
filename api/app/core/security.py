@@ -1,47 +1,12 @@
-from datetime import datetime, timedelta, timezone
-from typing import Any
-from jose import jwt
-from passlib.context import CryptContext
-from app.core.config import settings
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+import bcrypt
 
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+def hash_password(plain: str) -> str:
+    # gensalt stvara novi salt i upisuje ga u rezultat, uz algoritam i faktor rada
+    return bcrypt.hashpw(plain.encode(), bcrypt.gensalt()).decode()
 
 
-def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
-
-
-def create_access_token(subject: str | Any, role: str, expires_delta: timedelta | None = None) -> str:
-    if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
-    else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    
-    to_encode = {
-        "sub": str(subject),
-        "role": role,
-        "type": "access",
-        "iss": settings.JWT_ISSUER,
-        "exp": expire,
-    }
-    return jwt.encode(to_encode, settings.JWT_SECRET, algorithm="HS256")
-
-
-def create_refresh_token(subject: str | Any, role: str, expires_delta: timedelta | None = None) -> str:
-    if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
-    else:
-        expire = datetime.now(timezone.utc) + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
-
-    to_encode = {
-        "sub": str(subject),
-        "role": role,
-        "type": "refresh",
-        "iss": settings.JWT_ISSUER,
-        "exp": expire,
-    }
-    return jwt.encode(to_encode, settings.JWT_SECRET, algorithm="HS256")
+def verify_password(plain: str, hashed: str) -> bool:
+    # checkpw iz zapisa iščita salt i faktor rada, ponovi izračun i usporedi
+    # u stalnom vremenu, pa iz trajanja usporedbe ništa ne slijedi
+    return bcrypt.checkpw(plain.encode(), hashed.encode())

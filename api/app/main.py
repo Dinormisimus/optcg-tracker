@@ -4,6 +4,7 @@ from sqlalchemy import text
 from app.core.config import settings
 from app.core.database import AsyncSessionLocal
 from app.routers import auth_router, leaders_router
+from app.core.errors import register_error_handlers
 
 
 def create_app() -> FastAPI:
@@ -11,6 +12,7 @@ def create_app() -> FastAPI:
         title=settings.APP_NAME,
         docs_url="/docs" if settings.ENV == "dev" else None,
     )
+    register_error_handlers(app)
 
     # Registracija routera za autentifikaciju
     app.include_router(auth_router)
