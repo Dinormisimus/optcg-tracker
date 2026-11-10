@@ -13,7 +13,7 @@ from sqlalchemy.pool import NullPool
 from app.core.config import settings
 from app.core.deps import get_db
 from app.main import create_app
-from app.models import Base, Leader, User
+from app.models import Base, Leader, Tournament, User
 
 
 def _test_database_url() -> str:
@@ -150,6 +150,14 @@ async def leader(db: AsyncSession) -> Leader:
     db.add(leader)
     await db.commit()
     return leader
+
+
+@pytest.fixture
+async def tournament(db: AsyncSession, admin_user: User) -> Tournament:
+    tournament = Tournament(name="Test Tournament", organizer_id=admin_user.id)
+    db.add(tournament)
+    await db.commit()
+    return tournament
 
 
 def expired_token(user_id: int) -> str:

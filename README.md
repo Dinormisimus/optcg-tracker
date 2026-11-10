@@ -100,6 +100,16 @@ Health Check status: http://127.0.0.1:8000/health
 
 Swagger UI dokumentacija: http://127.0.0.1:8000/docs
 
+📡 Trenutno dostupne backend rute
+- `POST /auth/login` prima JSON: `{"username": "...", "password": "..."}`.
+- `POST /auth/refresh` prima refresh token i vraća novi par tokena.
+- `GET /auth/me` vraća prijavljenog korisnika.
+- `GET /leaders` podržava `limit`, `offset` i opcionalni filter `color`.
+- `GET /matches` vraća samo mečeve prijavljenog korisnika i podržava `limit` i
+  `offset`.
+- `GET`, `POST`, `PATCH` i `DELETE /matches/{match_id}` omogućuju upravljanje
+  vlastitim mečevima. Meč vezan uz turnir mora imati broj kola.
+
 🧪 Pokretanje testova
 Testovi koriste zasebnu PostgreSQL bazu kako razvojni podaci ne bi bili dirani.
 Po zadanim postavkama baza se naziva `optcg_db_test`; naziv se može promijeniti
