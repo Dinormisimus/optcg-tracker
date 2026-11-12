@@ -118,6 +118,19 @@ python -m uvicorn app.main:app --reload
 Ostavi ovaj prozor terminala otvoren dok koristiš aplikaciju. Zaustavi server s
 `Ctrl+C`.
 
+### Brzi demo sučelja
+
+Dok API radi, otvori novi PowerShell u korijenskoj mapi projekta i pokreni:
+
+```powershell
+py -m http.server 8765
+```
+
+Otvori `http://localhost:8765/web/login.html`. Za probu prijave koristi
+`organizer` / `Organizer123!` (izradu turnira i mečeva) ili
+`player1` / `Player123!` (mečeve). Demo stranice pozivaju lokalni API na portu
+8000 i koriste razvojni CORS pristup koji je omogućen samo u `ENV="dev"`.
+
 Otvori:
 
 - Swagger UI: <http://127.0.0.1:8000/docs>

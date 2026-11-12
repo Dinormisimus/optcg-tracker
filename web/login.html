@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="hr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Prijava — OPTCG Tracker</title>
+    <link rel="stylesheet" href="demo.css">
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="index.html"><span class="brand-mark">☠</span><span>OPTCG <span>TRACKER</span></span></a>
+      <nav><a href="index.html">Leaderi</a><a href="tournaments.html">Turniri</a><a href="matches.html">Mečevi</a></nav>
+    </header>
+    <main>
+      <section class="login-wrap panel">
+        <div class="eyebrow">Dobro došao natrag</div>
+        <h1>Prijava</h1>
+        <p class="intro">Prijavi se da bi pregledao turnire i bilježio svoje mečeve.</p>
+        <form id="login-form" style="margin-top:24px">
+          <label>Korisničko ime<input name="username" autocomplete="username" required></label>
+          <label>Lozinka<input name="password" type="password" autocomplete="current-password" required></label>
+          <button class="primary" type="submit">Prijavi se</button>
+          <p id="notice" class="notice" role="status"></p>
+        </form>
+        <p class="demo-credentials">Demo organizator: <strong>organizer</strong> / <strong>Organizer123!</strong><br>Demo igrač: <strong>player1</strong> / <strong>Player123!</strong></p>
+      </section>
+    </main>
+    <footer>OPTCG Tracker · Demo sučelje</footer>
+    <script src="demo.js"></script>
+  </body>
+</html>

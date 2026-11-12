@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="hr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Turniri — OPTCG Tracker</title>
+    <link rel="stylesheet" href="demo.css">
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="index.html"><span class="brand-mark">☠</span><span>OPTCG <span>TRACKER</span></span></a>
+      <nav><span id="user-label"></span><a href="index.html">Leaderi</a><a href="tournaments.html">Turniri</a><a href="matches.html">Mečevi</a><button type="button" data-logout>Odjava</button></nav>
+    </header>
+    <main>
+      <div class="eyebrow">Organizacija događaja</div>
+      <h1>Turniri</h1>
+      <p class="intro">Pregledaj postojeće turnire ili izradi novi kao organizator.</p>
+      <div class="layout">
+        <section id="create-panel" class="panel">
+          <h2>Novi turnir</h2>
+          <form id="tournament-form">
+            <label>Naziv turnira<input name="name" maxlength="150" placeholder="npr. Friday locals" required></label>
+            <label>Format
+              <select name="format">
+                <option value="SWISS">Swiss</option>
+                <option value="CUSTOM">Custom</option>
+              </select>
+            </label>
+            <button class="primary" type="submit">Izradi turnir</button>
+          </form>
+          <p id="create-hint" class="hint">Izrada turnira dostupna je korisnicima s ulogom organizatora.</p>
+          <p id="notice" class="notice" role="status"></p>
+        </section>
+        <section>
+          <h2>Dostupni turniri</h2>
+          <div id="tournament-list" class="items" aria-live="polite"></div>
+        </section>
+      </div>
+    </main>
+    <footer>OPTCG Tracker · Demo sučelje</footer>
+    <script src="demo.js"></script>
+  </body>
+</html>

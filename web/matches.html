@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="hr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mečevi — OPTCG Tracker</title>
+    <link rel="stylesheet" href="demo.css">
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="index.html"><span class="brand-mark">☠</span><span>OPTCG <span>TRACKER</span></span></a>
+      <nav><span id="user-label"></span><a href="index.html">Leaderi</a><a href="tournaments.html">Turniri</a><a href="matches.html">Mečevi</a><button type="button" data-logout>Odjava</button></nav>
+    </header>
+    <main>
+      <div class="eyebrow">Praćenje rezultata</div>
+      <h1>Mečevi</h1>
+      <p class="intro">Zabilježi rezultat meča i pregledaj svoje ranije unose.</p>
+      <div class="layout">
+        <section class="panel">
+          <h2>Novi meč</h2>
+          <form id="match-form">
+            <label>Moj Leader<select name="my_leader_id" required></select></label>
+            <label>Leader protivnika<select name="opponent_leader_id" required></select></label>
+            <label>Ime protivnika<input name="opponent_name" maxlength="100" required></label>
+            <label>Turnir (opcionalno)<select name="tournament_id"></select></label>
+            <label>Runda (opcionalno)<input name="round_number" type="number" min="1"></label>
+            <label>Ishod
+              <select name="result" required>
+                <option value="WIN">Pobjeda</option>
+                <option value="LOSS">Poraz</option>
+                <option value="DRAW">Neriješeno</option>
+              </select>
+            </label>
+            <label>Ishod bacanja kocke
+              <select name="dice_result" required>
+                <option value="WIN">Pobjeda</option>
+                <option value="LOSS">Poraz</option>
+              </select>
+            </label>
+            <label>Redoslijed igre
+              <select name="turn_order" required>
+                <option value="FIRST">Igrao sam prvi</option>
+                <option value="SECOND">Igrao sam drugi</option>
+              </select>
+            </label>
+            <button class="primary" type="submit">Spremi meč</button>
+          </form>
+          <p id="notice" class="notice" role="status"></p>
+          <p class="hint">Za unos meča u turnir moraš biti prijavljen na taj turnir s odabranim Leaderom.</p>
+        </section>
+        <section>
+          <h2>Moji mečevi</h2>
+          <div id="match-list" class="items" aria-live="polite"></div>
+        </section>
+      </div>
+    </main>
+    <footer>OPTCG Tracker · Demo sučelje</footer>
+    <script src="demo.js"></script>
+  </body>
+</html>
