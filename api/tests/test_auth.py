@@ -12,6 +12,91 @@ async def login(client: AsyncClient, username: str, password: str):
     )
 
 
+async def test_register_creates_regular_user_with_hashed_password(
+    client: AsyncClient, db: AsyncSession
+):
+    response = await client.post(
+        "/auth/register",
+        json={
+            "username": "  newplayer  ",
+            "email": "NewPlayer@example.com",
+            "password": "secure-password",
+            "role": "super_admin",
+        },
+    )
+
+    assert response.status_code == 201
+    body = response.json()
+    assert body["username"] == "newplayer"
+    assert body["email"] == "newplayer@example.com"
+    assert body["role"] == "user"
+    assert body["is_active"] is True
+    assert "password_hash" not in body
+
+    user = await db.get(User, body["id"])
+    assert user is not None
+    assert user.password_hash != "secure-password"
+    login_response = await login(client, "newplayer", "secure-password")
+    assert login_response.status_code == 200
+
+
+async def test_register_rejects_duplicate_username_or_email(
+    client: AsyncClient, player_user: User
+):
+    duplicate_username = await client.post(
+        "/auth/register",
+        json={
+            "username": "testplayer",
+            "email": "different@example.com",
+            "password": "secure-password",
+        },
+    )
+    duplicate_email = await client.post(
+        "/auth/register",
+        json={
+            "username": "different",
+            "email": "player@example.com",
+            "password": "secure-password",
+        },
+    )
+
+    assert duplicate_username.status_code == 409
+    assert duplicate_username.json()["code"] == "account_already_exists"
+    assert duplicate_email.status_code == 409
+    assert duplicate_email.json() == duplicate_username.json()
+
+
+async def test_register_validates_password_and_email(client: AsyncClient):
+    short_password = await client.post(
+        "/auth/register",
+        json={
+            "username": "newplayer",
+            "email": "newplayer@example.com",
+            "password": "short",
+        },
+    )
+    long_password = await client.post(
+        "/auth/register",
+        json={
+            "username": "newplayer",
+            "email": "newplayer@example.com",
+            "password": "č" * 40,
+        },
+    )
+    invalid_email = await client.post(
+        "/auth/register",
+        json={
+            "username": "newplayer",
+            "email": "not-an-email",
+            "password": "secure-password",
+        },
+    )
+
+    assert short_password.status_code == 422
+    assert long_password.status_code == 422
+    assert invalid_email.status_code == 422
+
+
 async def test_login_returns_access_and_refresh_tokens(
     client: AsyncClient, admin_user: User
 ):

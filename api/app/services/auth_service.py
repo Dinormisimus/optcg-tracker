@@ -1,3 +1,4 @@
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.errors import AppError
@@ -11,8 +12,10 @@ from app.core.jwt import (
 from app.core.security import hash_password, verify_password
 from app.models import User
 from app.repositories import user_repo
+from app.schemas.user import UserCreate
 
 INVALID_CREDENTIALS = "Neispravno korisničko ime ili lozinka"
+ACCOUNT_ALREADY_EXISTS = "Korisničko ime ili e-mail već se koristi"
 
 # Hash lozinke koja ne pripada nikome: provjera se izvodi i kad korisnik ne postoji,
 # pa ni trajanje odgovora ne odaje postoji li korisničko ime
@@ -25,6 +28,29 @@ async def authenticate_user(db: AsyncSession, username: str, password: str) -> U
     # Nepostojeći korisnik, kriva lozinka i deaktiviran račun: isti odgovor
     if not user or not password_ok or not user.is_active:
         raise AppError("invalid_credentials", INVALID_CREDENTIALS, 401)
+    return user
+
+
+async def register_user(db: AsyncSession, body: UserCreate) -> User:
+    if (
+        await user_repo.get_by_username(db, body.username)
+        or await user_repo.get_by_email(db, str(body.email))
+    ):
+        raise AppError("account_already_exists", ACCOUNT_ALREADY_EXISTS, 409)
+
+    user = User(
+        username=body.username,
+        email=str(body.email),
+        password_hash=hash_password(body.password),
+        role="user",
+    )
+    db.add(user)
+    try:
+        await db.commit()
+    except IntegrityError:
+        await db.rollback()
+        raise AppError("account_already_exists", ACCOUNT_ALREADY_EXISTS, 409)
+    await db.refresh(user)
     return user
 
 

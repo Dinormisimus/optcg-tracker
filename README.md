@@ -182,6 +182,7 @@ gumba nakon poziva `POST /auth/login`.
 | Metoda | Ruta | Namjena |
 |---|---|---|
 | `GET` | `/health` | Provjera API-ja i baze |
+| `POST` | `/auth/register` | Registracija običnog korisnika |
 | `POST` | `/auth/login` | Prijava i dobivanje tokena |
 | `POST` | `/auth/refresh` | Obnova tokena |
 | `GET` | `/auth/me` | Podaci prijavljenog korisnika |

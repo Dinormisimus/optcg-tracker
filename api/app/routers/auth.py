@@ -1,15 +1,25 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.deps import get_current_user, get_db
 from app.models import User
-from app.schemas import LoginRequest, Token, UserResponse
+from app.schemas import LoginRequest, Token, UserCreate, UserResponse
 from app.schemas.auth import RefreshTokenRequest
 from app.services import auth_service
 
 router = APIRouter(prefix="/auth", tags=["Autentifikacija"])
+
+
+@router.post(
+    "/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED
+)
+async def register(
+    body: UserCreate,
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> User:
+    return await auth_service.register_user(db, body)
 
 
 @router.post("/login", response_model=Token)
