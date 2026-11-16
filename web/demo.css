@@ -88,10 +88,35 @@ button.primary {
 }
 button.primary:hover { background: #ff8757; }
 button:disabled { cursor: wait; opacity: .65; }
+.delete-button {
+  margin-top: 12px;
+  padding: 7px 10px;
+  border: 1px solid #f26b3866;
+  border-radius: 8px;
+  background: #f26b3814;
+  color: #ff9a76;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+}
+.delete-button:hover { background: #f26b3826; }
 .notice { min-height: 20px; margin: 0; color: #f3a17e; font-size: 13px; line-height: 1.5; }
 .notice.success { color: #8bd1a0; }
 .login-wrap { width: min(440px, 100%); margin: 0 auto; }
 .demo-credentials { margin: 18px 0 0; padding: 12px; border-radius: 9px; background: #ffffff08; color: #aaaab1; font-size: 12px; line-height: 1.65; }
+.stats-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 28px 0; }
+.stat-card { padding: 18px; border: 1px solid #ffffff1b; border-radius: 12px; background: #1b1c20; }
+.stat-card span { display: block; color: #a5a5ac; font-size: 12px; }
+.stat-card strong { display: block; margin-top: 8px; color: #f27b4c; font-size: 26px; }
+.stats-sections { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 16px; }
+.stats-sections .panel { min-width: 0; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap; }
+th, td { padding: 10px 9px; border-bottom: 1px solid #ffffff16; text-align: left; }
+th { color: #aaaab1; font-size: 11px; letter-spacing: .04em; }
+td { color: #e4e4e7; }
+td.numeric { font-variant-numeric: tabular-nums; }
+a.inline-link { color: #f27b4c; }
 footer { padding: 20px; border-top: 1px solid #ffffff16; color: #77777e; text-align: center; font-size: 12px; }
 
 @media (max-width: 720px) {

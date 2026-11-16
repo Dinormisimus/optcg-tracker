@@ -99,6 +99,67 @@ function addItem(container, title, details, badge) {
   container.append(article);
 }
 
+function addMatchItem(container, match, details) {
+  addItem(container, `Meč #${match.id}`, details);
+  const article = container.lastElementChild;
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "delete-button";
+  button.dataset.deleteMatch = match.id;
+  button.textContent = "Obriši meč";
+  article.append(button);
+}
+
+function formatPercent(value) {
+  return value == null ? "—" : `${value.toFixed(2)}%`;
+}
+
+function renderStatsTable(containerId, rows, columns, emptyMessage) {
+  const container = document.querySelector(`#${containerId}`);
+  container.replaceChildren();
+  if (!rows.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = emptyMessage;
+    container.append(empty);
+    return;
+  }
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "table-wrap";
+  const table = document.createElement("table");
+  const head = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+  for (const column of columns) {
+    const cell = document.createElement("th");
+    cell.scope = "col";
+    cell.textContent = column.label;
+    headerRow.append(cell);
+  }
+  head.append(headerRow);
+
+  const body = document.createElement("tbody");
+  for (const row of rows) {
+    const tableRow = document.createElement("tr");
+    for (const column of columns) {
+      const cell = document.createElement("td");
+      const value = column.value(row);
+      cell.textContent = column.format ? column.format(value) : String(value ?? "—");
+      if (column.numeric) cell.className = "numeric";
+      tableRow.append(cell);
+    }
+    body.append(tableRow);
+  }
+
+  table.append(head, body);
+  wrapper.append(table);
+  container.append(wrapper);
+}
+
+function leaderLabel(name, code) {
+  return `${name} (${code})`;
+}
+
 async function initLogin() {
   if (getTokens()?.access_token) {
     try {
@@ -125,6 +186,42 @@ async function initLogin() {
       });
       localStorage.setItem(TOKEN_KEY, JSON.stringify(tokens));
       window.location.href = "matches.html";
+    } catch (error) {
+      showNotice(error.message);
+    } finally {
+      button.disabled = false;
+    }
+  });
+}
+
+async function initRegister() {
+  document.querySelector("#register-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const button = form.querySelector("button");
+    const password = form.elements.password.value;
+    if (password !== form.elements.password_confirmation.value) {
+      showNotice("Lozinke se ne podudaraju.");
+      return;
+    }
+    if (new TextEncoder().encode(password).length > 72) {
+      showNotice("Lozinka ne smije biti duža od 72 bajta.");
+      return;
+    }
+
+    button.disabled = true;
+    showNotice("");
+    try {
+      await api("/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          username: form.elements.username.value.trim(),
+          email: form.elements.email.value.trim(),
+          password,
+        }),
+      });
+      form.reset();
+      showNotice("Registracija je uspjela. Sada se možeš prijaviti.", true);
     } catch (error) {
       showNotice(error.message);
     } finally {
@@ -224,9 +321,28 @@ async function initMatches() {
         match.round_number ? `Runda ${match.round_number}` : null,
         match.tournament_id ? `Turnir #${match.tournament_id}` : null,
       ].filter(Boolean).join(" · ");
-      addItem(list, `Meč #${match.id}`, details);
+      addMatchItem(list, match, details);
     }
   }
+
+  list.addEventListener("click", async (event) => {
+    if (!(event.target instanceof Element)) return;
+    const button = event.target.closest("button[data-delete-match]");
+    if (!button || !window.confirm(`Želiš li obrisati meč #${button.dataset.deleteMatch}?`)) {
+      return;
+    }
+
+    button.disabled = true;
+    showNotice("");
+    try {
+      await api(`/matches/${button.dataset.deleteMatch}`, { method: "DELETE" });
+      showNotice("Meč je obrisan.", true);
+      await load();
+    } catch (error) {
+      showNotice(error.message);
+      button.disabled = false;
+    }
+  });
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -265,7 +381,110 @@ async function initMatches() {
   }
 }
 
+async function initStats() {
+  const user = await currentUser();
+  if (!user) return;
+
+  const summary = document.querySelector("#summary");
+  try {
+    const [overall, myLeaders, opponents, opponentLeaders, matchups] = await Promise.all([
+      api("/stats/overall"),
+      getAll("/stats/leaders"),
+      getAll("/stats/opponents"),
+      getAll("/stats/opponent-leaders"),
+      getAll("/stats/matchups"),
+    ]);
+
+    const summaryItems = [
+      ["Mečevi", overall.total_matches],
+      ["Pobjede", overall.wins],
+      ["Porazi", overall.losses],
+      ["Neriješeno", overall.draws],
+      ["Odlučeni mečevi", overall.decided_matches],
+      ["Postotak pobjeda", formatPercent(overall.win_rate)],
+    ];
+    summary.replaceChildren();
+    for (const [label, value] of summaryItems) {
+      const card = document.createElement("article");
+      card.className = "stat-card";
+      const caption = document.createElement("span");
+      caption.textContent = label;
+      const number = document.createElement("strong");
+      number.textContent = String(value ?? "—");
+      card.append(caption, number);
+      summary.append(card);
+    }
+
+    const resultColumns = [
+      { key: "total_matches", label: "Mečevi", numeric: true },
+      { key: "wins", label: "Pobjede", numeric: true },
+      { key: "losses", label: "Porazi", numeric: true },
+      { key: "draws", label: "Neriješeno", numeric: true },
+      { key: "win_rate", label: "Pobjede %", numeric: true, format: formatPercent },
+    ];
+    const makeColumns = (identity) => [
+      ...identity,
+      ...resultColumns.map((column) => ({
+        label: column.label,
+        numeric: column.numeric,
+        value: (row) => row[column.key],
+        format: column.format,
+      })),
+    ];
+    const textColumn = (key, label) => ({ label, value: (row) => row[key] });
+
+    renderStatsTable(
+      "by-my-leader",
+      myLeaders,
+      makeColumns([
+        {
+          label: "Moj Leader",
+          value: (row) => leaderLabel(row.leader_name, row.leader_code),
+        },
+      ]),
+      "Još nema mečeva s tvojim Leaderima.",
+    );
+    renderStatsTable(
+      "by-opponent",
+      opponents,
+      makeColumns([textColumn("opponent_name", "Protivnik")]),
+      "Još nema zabilježenih protivnika.",
+    );
+    renderStatsTable(
+      "by-opponent-leader",
+      opponentLeaders,
+      makeColumns([
+        {
+          label: "Leader protivnika",
+          value: (row) => leaderLabel(row.opponent_leader_name, row.opponent_leader_code),
+        },
+      ]),
+      "Još nema mečeva protiv Leader karata.",
+    );
+    renderStatsTable(
+      "by-matchup",
+      matchups,
+      makeColumns([
+        textColumn("opponent_name", "Protivnik"),
+        {
+          label: "Leader protivnika",
+          value: (row) => leaderLabel(row.opponent_leader_name, row.opponent_leader_code),
+        },
+      ]),
+      "Još nema zabilježenih kombinacija protivnika i Leadera.",
+    );
+  } catch (error) {
+    showNotice(error.message);
+    for (const id of ["by-my-leader", "by-opponent", "by-opponent-leader", "by-matchup"]) {
+      document.querySelector(`#${id}`).replaceChildren();
+    }
+    summary.replaceChildren();
+  }
+}
+
 document.querySelectorAll("[data-logout]").forEach((button) => button.addEventListener("click", logout));
 if (document.querySelector("#login-form")) initLogin();
+if (document.querySelector("#register-form")) initRegister();
 if (document.querySelector("#tournament-form")) initTournaments();
 if (document.querySelector("#match-form")) initMatches();
+if (document.querySelector("#summary")) initStats();

@@ -118,18 +118,32 @@ python -m uvicorn app.main:app --reload
 Ostavi ovaj prozor terminala otvoren dok koristiš aplikaciju. Zaustavi server s
 `Ctrl+C`.
 
-### Brzi demo sučelja
+### Lokalno pokretanje web sučelja
 
-Dok API radi, otvori novi PowerShell u korijenskoj mapi projekta i pokreni:
+Web sučelje je izrađeno od statičnih HTML, CSS i JavaScript datoteka, pa mu ne
+treba posebna instalacija paketa ni naredba za izgradnju. Za ispravan rad trebaju
+biti pokrenuti PostgreSQL i API prema koracima iznad. API ostavi pokrenut u
+zasebnom PowerShell prozoru.
+
+Otvori još jedan PowerShell prozor u **korijenskoj mapi projekta**
+(`optcg-tracker`) i pokreni jednostavan lokalni web-poslužitelj:
 
 ```powershell
 py -m http.server 8765
 ```
 
-Otvori `http://localhost:8765/web/login.html`. Za probu prijave koristi
-`organizer` / `Organizer123!` (izradu turnira i mečeva) ili
-`player1` / `Player123!` (mečeve). Demo stranice pozivaju lokalni API na portu
-8000 i koriste razvojni CORS pristup koji je omogućen samo u `ENV="dev"`.
+Dok taj prozor otvoren, web-poslužitelj radi. Otvori preglednik na
+<http://127.0.0.1:8765/web/login.html>. Za probu prijave koristi
+`organizer` / `Organizer123!` za izradu turnira ili
+`player1` / `Player123!` za unos mečeva. Možeš i otvoriti Registraciju za izradu
+običnog korisničkog računa. Nakon prijave su dostupni Leaderi, turniri, unos i
+brisanje mečeva te statistika.
+
+Zaustavi web-poslužitelj s `Ctrl+C`. Ovo pokreće stranicu **lokalno na računalu**;
+ne objavljuje je na internetu. Demo sučelje poziva API na
+`http://127.0.0.1:8000`, a razvojni CORS pristup radi samo kada je
+`ENV="dev"`. Javno postavljanje zahtijeva zasebno hostanje web sučelja i API-ja,
+konfiguraciju produkcijskog CORS-a te dostupnu bazu podataka.
 
 Otvori:
 

@@ -23,16 +23,16 @@ def create_app() -> FastAPI:
     # Nije za prvi dio projekta, ali je korisno za testiranje i razvoj
     # Dodavanje CORS middleware-a samo u razvojnom okruženju
     
-    #if settings.ENV == "dev":
-    #    app.add_middleware(
-    #        CORSMiddleware,
-    #        allow_origins=[
-    #            "http://localhost:8765",
-    #            "http://127.0.0.1:8765",
-    #        ],
-    #        allow_methods=["GET", "POST", "PATCH", "DELETE"],
-    #        allow_headers=["Authorization", "Content-Type"],
-    #    )
+    if settings.ENV == "dev":
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=[
+                "http://localhost:8765",
+                "http://127.0.0.1:8765",
+            ],
+            allow_methods=["GET", "POST", "PATCH", "DELETE"],
+            allow_headers=["Authorization", "Content-Type"],
+        )
     
 
     # Registracija routera za autentifikaciju

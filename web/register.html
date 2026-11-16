@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="hr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registracija — OPTCG Tracker</title>
+    <link rel="stylesheet" href="demo.css">
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="index.html"><span class="brand-mark">☠</span><span>OPTCG <span>TRACKER</span></span></a>
+      <nav><a href="index.html">Leaderi</a><a href="tournaments.html">Turniri</a><a href="matches.html">Mečevi</a><a href="stats.html">Statistika</a><a href="login.html">Prijava</a></nav>
+    </header>
+    <main>
+      <section class="login-wrap panel">
+        <div class="eyebrow">Pridruži se igračima</div>
+        <h1>Registracija</h1>
+        <p class="intro">Kreiraj račun za bilježenje mečeva i praćenje statistike.</p>
+        <form id="register-form" style="margin-top:24px">
+          <label>Korisničko ime<input name="username" autocomplete="username" minlength="1" maxlength="50" required></label>
+          <label>E-mail<input name="email" type="email" autocomplete="email" maxlength="255" required></label>
+          <label>Lozinka<input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+          <label>Ponovi lozinku<input name="password_confirmation" type="password" autocomplete="new-password" minlength="8" required></label>
+          <button class="primary" type="submit">Izradi račun</button>
+          <p id="notice" class="notice" role="status"></p>
+        </form>
+        <p class="hint">Već imaš račun? <a href="login.html">Prijavi se</a>.</p>
+      </section>
+    </main>
+    <footer>OPTCG Tracker · Demo sučelje</footer>
+    <script src="demo.js"></script>
+  </body>
+</html>
