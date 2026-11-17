@@ -21,7 +21,9 @@ async def app_error_handler(request: Request, exc: AppError) -> JSONResponse:
     )
 
 
-async def http_error_handler(request: Request, exc: StarletteHTTPException) -> JSONResponse:
+async def http_error_handler(
+    request: Request, exc: StarletteHTTPException
+) -> JSONResponse:
     return JSONResponse(
         status_code=exc.status_code,
         content={"code": f"http_{exc.status_code}", "message": str(exc.detail)},
@@ -29,7 +31,9 @@ async def http_error_handler(request: Request, exc: StarletteHTTPException) -> J
     )
 
 
-async def validation_error_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+async def validation_error_handler(
+    request: Request, exc: RequestValidationError
+) -> JSONResponse:
     errors = [
         {"field": ".".join(str(part) for part in e["loc"][1:]), "message": e["msg"]}
         for e in exc.errors()

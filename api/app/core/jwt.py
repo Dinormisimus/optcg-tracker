@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import jwt
 from jwt import ExpiredSignatureError, InvalidTokenError
@@ -18,7 +18,7 @@ ALGORITHM = "HS256"
 
 def create_access_token(user_id: int, role: str) -> str:
     """Kratkotrajan token koji putuje uz svaki zahtjev."""
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     payload = {
         "sub": str(user_id),
         "role": role,
@@ -31,7 +31,7 @@ def create_access_token(user_id: int, role: str) -> str:
 
 def create_refresh_token(user_id: int) -> str:
     """Dugotrajan token koji se šalje samo na /auth/refresh; nosi najmanje."""
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     payload = {
         "sub": str(user_id),
         "type": "refresh",

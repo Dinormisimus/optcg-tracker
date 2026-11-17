@@ -32,10 +32,9 @@ async def authenticate_user(db: AsyncSession, username: str, password: str) -> U
 
 
 async def register_user(db: AsyncSession, body: UserCreate) -> User:
-    if (
-        await user_repo.get_by_username(db, body.username)
-        or await user_repo.get_by_email(db, str(body.email))
-    ):
+    if await user_repo.get_by_username(
+        db, body.username
+    ) or await user_repo.get_by_email(db, str(body.email)):
         raise AppError("account_already_exists", ACCOUNT_ALREADY_EXISTS, 409)
 
     user = User(

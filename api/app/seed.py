@@ -1,10 +1,12 @@
 import asyncio
 import json
 from pathlib import Path
+
 from sqlalchemy import select
+
 from app.core.database import AsyncSessionLocal
 from app.core.security import hash_password
-from app.models import User, Leader
+from app.models import Leader, User
 
 INITIAL_USERS = [
     {
@@ -30,6 +32,7 @@ INITIAL_USERS = [
     },
 ]
 
+
 async def seed_database():
     async with AsyncSessionLocal() as session:
         # 1. Unos korisnika
@@ -40,10 +43,14 @@ async def seed_database():
                 session.add(User(**user_data))
 
         # 2. Unos vođa iz JSON datoteke
-        json_path = Path(__file__).resolve().parents[2] / "src" / "data" / "leaders.json"
+        json_path = (
+            Path(__file__).resolve().parents[2] / "src" / "data" / "leaders.json"
+        )
         if json_path.exists():
-            with open(json_path, "r", encoding="utf-8") as f:
-                leaders_list = json.load(f)
+            leaders_json = await asyncio.to_thread(
+                json_path.read_text, encoding="utf-8"
+            )
+            leaders_list = json.loads(leaders_json)
 
             for leader_data in leaders_list:
                 stmt = select(Leader).where(Leader.code == leader_data["code"])
@@ -53,6 +60,7 @@ async def seed_database():
 
         await session.commit()
         print("Baza je uspješno osvježena s vođama (seed complete)!")
+
 
 if __name__ == "__main__":
     asyncio.run(seed_database())
