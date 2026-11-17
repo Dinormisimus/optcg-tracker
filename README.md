@@ -193,36 +193,63 @@ samo za razvoj — nemoj koristiti te lozinke u produkciji.
 Zaštićene rute traže JWT access token. Swaggeru ga možeš dati preko **Authorize**
 gumba nakon poziva `POST /auth/login`.
 
-| Metoda | Ruta | Namjena |
-|---|---|---|
-| `GET` | `/health` | Provjera API-ja i baze |
-| `POST` | `/auth/register` | Registracija običnog korisnika |
-| `POST` | `/auth/login` | Prijava i dobivanje tokena |
-| `POST` | `/auth/refresh` | Obnova tokena |
-| `GET` | `/auth/me` | Podaci prijavljenog korisnika |
-| `GET` | `/leaders` | Popis Leadera; filter `color`, `limit`, `offset` |
-| `POST` | `/leaders` | Dodavanje Leadera (admin) |
-| `GET` | `/matches` | Vlastiti mečevi; `limit`, `offset` |
-| `POST` | `/matches` | Bilježenje meča |
-| `GET` | `/matches/{match_id}` | Dohvat vlastitog meča |
-| `PATCH` | `/matches/{match_id}` | Izmjena vlastitog meča |
-| `DELETE` | `/matches/{match_id}` | Brisanje vlastitog meča |
-| `GET` | `/tournaments` | Popis turnira; `limit`, `offset` |
-| `GET` | `/tournaments/mine` | Turniri na kojima sudjeluje prijavljeni korisnik |
-| `POST` | `/tournaments` | Stvaranje turnira (admin) |
-| `GET` | `/tournaments/{tournament_id}` | Dohvat turnira |
-| `GET` | `/tournaments/{tournament_id}/participants` | Prijavljeni igrači i njihovi Leaderi |
-| `POST` | `/tournaments/{tournament_id}/participants/me` | Prijava na turnir uz odabir Leadera |
-| `GET` | `/tournaments/{tournament_id}/participants/me` | Pregled vlastite prijave i Leadera |
-| `PATCH` | `/tournaments/{tournament_id}/participants/me` | Promjena Leadera prije prvog meča |
-| `DELETE` | `/tournaments/{tournament_id}/participants/me` | Odjava prije prvog meča |
-| `PATCH` | `/tournaments/{tournament_id}` | Izmjena turnira (organizator ili superadmin) |
-| `DELETE` | `/tournaments/{tournament_id}` | Brisanje praznog turnira |
-| `GET` | `/stats/overall` | Ukupna statistika prijavljenog korisnika |
-| `GET` | `/stats/leaders` | Statistika s vlastitim Leaderima |
-| `GET` | `/stats/opponents` | Statistika po imenu protivnika |
-| `GET` | `/stats/opponent-leaders` | Statistika protiv protivničkih Leadera |
-| `GET` | `/stats/matchups` | Statistika po protivniku i njegovu Leaderu |
+### Health
+
+| Metoda | Putanja | Opis | Pristup |
+|---|---|---|---|
+| `GET` | `/health` | Provjera API-ja i veze s bazom | Javno |
+
+### Autentikacija
+
+| Metoda | Putanja | Opis | Pristup |
+|---|---|---|---|
+| `POST` | `/auth/register` | Registracija običnog korisnika | Javno |
+| `POST` | `/auth/login` | Prijava i dobivanje access i refresh tokena | Javno |
+| `POST` | `/auth/refresh` | Izdavanje novog para tokena | Valjan refresh token |
+| `GET` | `/auth/me` | Podaci prijavljenog korisnika | Prijavljen korisnik |
+
+### Leaderi
+
+| Metoda | Putanja | Opis | Pristup |
+|---|---|---|---|
+| `GET` | `/leaders` | Popis Leadera; filter `color` i paginacija `limit`/`offset` | Javno |
+| `POST` | `/leaders` | Dodavanje Leadera | Admin ili superadmin |
+
+### Mečevi
+
+| Metoda | Putanja | Opis | Pristup |
+|---|---|---|---|
+| `GET` | `/matches` | Vlastiti mečevi; paginacija `limit`/`offset` | Prijavljen korisnik |
+| `POST` | `/matches` | Bilježenje meča | Prijavljen korisnik |
+| `GET` | `/matches/{match_id}` | Dohvat vlastitog meča | Vlasnik meča |
+| `PATCH` | `/matches/{match_id}` | Izmjena vlastitog meča | Vlasnik meča |
+| `DELETE` | `/matches/{match_id}` | Brisanje vlastitog meča | Vlasnik meča |
+
+### Turniri i sudionici
+
+| Metoda | Putanja | Opis | Pristup |
+|---|---|---|---|
+| `GET` | `/tournaments` | Popis turnira; paginacija `limit`/`offset` | Prijavljen korisnik |
+| `GET` | `/tournaments/mine` | Turniri na kojima korisnik sudjeluje; paginacija | Prijavljen korisnik |
+| `POST` | `/tournaments` | Stvaranje turnira | Admin ili superadmin |
+| `GET` | `/tournaments/{tournament_id}` | Dohvat turnira | Prijavljen korisnik |
+| `GET` | `/tournaments/{tournament_id}/participants` | Popis sudionika i njihovih Leadera; paginacija | Prijavljen korisnik |
+| `POST` | `/tournaments/{tournament_id}/participants/me` | Prijava na turnir uz odabir Leadera | Prijavljen korisnik, za sebe |
+| `GET` | `/tournaments/{tournament_id}/participants/me` | Pregled vlastite prijave i Leadera | Prijavljen korisnik, za sebe |
+| `PATCH` | `/tournaments/{tournament_id}/participants/me` | Promjena Leadera prije prvog meča | Prijavljen korisnik, za sebe |
+| `DELETE` | `/tournaments/{tournament_id}/participants/me` | Odjava prije prvog meča | Prijavljen korisnik, za sebe |
+| `PATCH` | `/tournaments/{tournament_id}` | Izmjena turnira | Organizator turnira ili superadmin |
+| `DELETE` | `/tournaments/{tournament_id}` | Brisanje turnira bez mečeva | Organizator turnira ili superadmin |
+
+### Statistika
+
+| Metoda | Putanja | Opis | Pristup |
+|---|---|---|---|
+| `GET` | `/stats/overall` | Ukupna statistika korisnika | Prijavljen korisnik, vlastiti podaci |
+| `GET` | `/stats/leaders` | Statistika s vlastitim Leaderima; paginacija | Prijavljen korisnik, vlastiti podaci |
+| `GET` | `/stats/opponents` | Statistika po imenu protivnika; paginacija | Prijavljen korisnik, vlastiti podaci |
+| `GET` | `/stats/opponent-leaders` | Statistika protiv protivničkih Leadera; paginacija | Prijavljen korisnik, vlastiti podaci |
+| `GET` | `/stats/matchups` | Statistika po protivniku i njegovu Leaderu; paginacija | Prijavljen korisnik, vlastiti podaci |
 
 Igrač može pregledavati turnire, ali samo organizator turnira ili
 superadministrator može ga izmijeniti ili obrisati. Turnir s povezanim mečevima
