@@ -189,5 +189,5 @@ async def test_tournament_match_can_be_created_without_round(
     assert registration.status_code == 201
     assert response.status_code == 201
     assert response.json()["tournament_id"] == tournament.id
-    assert response.json()["round_number"] is None
+    assert response.json()["round_number"] is None #Ovo treba biti popravljeno ne svida mi se ovo poslovno pravilo. Tournament mora biti bolje struktuiran.
     assert response.json()["opponent_user_id"] == player_user.id

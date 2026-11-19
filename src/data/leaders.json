@@ -580,6 +580,36 @@
     "color": "Yellow"
   },
   {
+    "name": "Karoo",
+    "code": "OP18-001",
+    "color": "Red/Blue"
+  },
+  {
+    "name": "Franky",
+    "code": "OP18-021",
+    "color": "Green/Purple"
+  },
+  {
+    "name": "Monkey.D.Luffy",
+    "code": "OP18-022",
+    "color": "Green"
+  },
+  {
+    "name": "Ms. All Sunday",
+    "code": "OP18-041",
+    "color": "Blue"
+  },
+  {
+    "name": "Saint Gunko",
+    "code": "OP18-060",
+    "color": "Purple/Black"
+  },
+  {
+    "name": "Spandam",
+    "code": "OP18-079",
+    "color": "Black/Yellow"
+  },
+  {
     "name": "Uta",
     "code": "P-011",
     "color": "Red"
